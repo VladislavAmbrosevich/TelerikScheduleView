@@ -1,0 +1,220 @@
+﻿<UserControl x:Class="TestReservationsCalendar.BuildingLink.Views.ReservationsCalendarView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TestReservationsCalendar"
+             xmlns:scheduleView="clr-namespace:Telerik.Windows.Controls;assembly=Telerik.Windows.Controls.ScheduleView"
+             xmlns:viewModels="clr-namespace:TestReservationsCalendar.BuildingLink.ViewModels"
+             xmlns:telerik="http://schemas.telerik.com/2008/xaml/presentation"
+
+             mc:Ignorable="d" 
+             d:DesignHeight="1000" d:DesignWidth="1000">
+    <UserControl.DataContext>
+        <viewModels:ReservationsCalendarViewModel />
+    </UserControl.DataContext>
+
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary
+						Source="../Styles/Telerik.Windows.Controls.ScheduleView.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <SolidColorBrush x:Key="RequestedStatusBrush" Color="#E6B972" />
+            <SolidColorBrush x:Key="ApprovedStatusBrush" Color="#9deaa1" />
+            <SolidColorBrush x:Key="DeclinedStatusBrush" Color="#ffbfbf" />
+            <SolidColorBrush x:Key="CanceledStatusBrush" Color="#d0bcfe" />
+
+
+            <Style TargetType="scheduleView:AppointmentItem" x:Key="MonthViewBaseStyle" BasedOn="{StaticResource AppointmentItemBaseStyle}">
+                <Setter Property="Margin" Value="2 1 2 0"/>
+                <Setter Property="Height" Value="60"/>
+                <Setter Property="Foreground" Value="Black"/>
+            </Style>
+
+
+            <Style x:Key="RequestedStatusStyle" TargetType="scheduleView:AppointmentItem" BasedOn="{StaticResource MonthViewBaseStyle}">
+                <Setter Property="Background" Value="{StaticResource RequestedStatusBrush}" />
+            </Style>
+            <Style x:Key="ApprovedStatusStyle" TargetType="scheduleView:AppointmentItem" BasedOn="{StaticResource MonthViewBaseStyle}">
+                <Setter Property="Background" Value="{StaticResource ApprovedStatusBrush}" />
+            </Style>
+            <Style x:Key="DeclinedStatusStyle" TargetType="scheduleView:AppointmentItem" BasedOn="{StaticResource MonthViewBaseStyle}">
+                <Setter Property="Background" Value="{StaticResource DeclinedStatusBrush}" />
+            </Style>
+            <Style x:Key="CanceledStatusStyle" TargetType="scheduleView:AppointmentItem" BasedOn="{StaticResource MonthViewBaseStyle}">
+                <Setter Property="Background" Value="{StaticResource CanceledStatusBrush}" />
+            </Style>
+
+            <DataTemplate x:Key="AppointmentTemplate">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="1" Margin="0 2 0 0">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock HorizontalAlignment="Left" Text="⭯" Visibility="{Binding Appointment.IsRecurrent, Converter={StaticResource BooleanToVisibilityConverter}}"></TextBlock>
+                            <TextBlock Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"
+                                       FontSize="10" Foreground="Black" FontWeight="SemiBold" FontFamily="Segoe UI, Arial, Helvetica, sans-serif" TextDecorations="Underline">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0} - {1}">
+                                        <Binding Path="Appointment.StartTime" />
+                                        <Binding Path="Appointment.EndTime" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </Grid>
+                        <TextBlock Text="{Binding Appointment.AmenityName}" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap"
+                                   FontSize="10" Foreground="Black" FontWeight="SemiBold" FontFamily="Segoe UI, Arial, Helvetica, sans-serif" TextDecorations="Underline"/>
+                        <TextBlock Text="{Binding Appointment.RequestedFor}" HorizontalAlignment="Center" VerticalAlignment="Center" TextDecorations="Underline"
+                                   FontSize="9" Foreground="Black" FontFamily="Segoe UI, Arial, Helvetica, sans-serif" TextWrapping="Wrap" Margin="0"/>
+                    </StackPanel>
+                </Grid>
+            </DataTemplate>
+
+            <Style x:Key="CustomMonthViewBottomLevelWeekGroupStyle" TargetType="scheduleView:GroupHeader" BasedOn="{StaticResource GroupHeaderBaseStyle}">
+                <Setter Property="IsExpanded" Value="True" />
+                <Setter Property="Height" Value="Auto" />
+                <Setter Property="Padding" Value="0,30,0,0" />
+            </Style>
+
+            <Style x:Key="CustomMonthViewWeekGroupStyle" TargetType="scheduleView:GroupHeader" BasedOn="{StaticResource GroupHeaderBaseStyle}">
+                <Setter Property="IsExpanded" Value="True" />
+                <Setter Property="Height" Value="Auto" />
+            </Style>
+
+            <scheduleView:OrientedGroupHeaderStyleSelector x:Key="CustomGroupHeaderStyleSelector" 
+                                                                  HorizontalStyle="{StaticResource HorizontalGroupHeaderStyle}" 
+                                                                  HorizontalTodayStyle="{StaticResource HorizontalTodayGroupHeaderStyle}" 
+                                                                  HorizontalBottomLevelStyle="{StaticResource HorizontalBottomLevelGroupHeaderStyle}" 
+                                                                  HorizontalTodayBottomLevelStyle="{StaticResource HorizontalBottomLevelTodayGroupHeaderStyle}" 
+                                                                  VerticalStyle="{StaticResource VerticalGroupHeaderStyle}" 
+                                                                  VerticalTodayStyle="{StaticResource VerticalTodayGroupHeaderStyle}" 
+                                                                  VerticalBottomLevelStyle="{StaticResource VerticalBottomLevelGroupHeaderStyle}" 
+                                                                  VerticalTodayBottomLevelStyle="{StaticResource VerticalBottomLevelTodayGroupHeaderStyle}" 
+                                                                  MonthViewWeekGroupStyle="{StaticResource CustomMonthViewWeekGroupStyle}" 
+                                                                  MonthViewBottomLevelWeekGroupStyle="{StaticResource CustomMonthViewBottomLevelWeekGroupStyle}"/>
+
+            <Style x:Key="CustomTimeRulerMonthViewItemStyle" TargetType="scheduleView:TimeRulerMonthViewItem">
+                <Setter Property="FontFamily" Value="{telerik:Office2016Resource ResourceKey=FontFamily}"/>
+                <Setter Property="FontSize" Value="{telerik:Office2016Resource ResourceKey=FontSize}"/>
+                <Setter Property="Foreground" Value="{telerik:Office2016Resource ResourceKey=MarkerBrush}"/>
+                <Setter Property="BorderThickness" Value="1 1 0 0"/>
+                <Setter Property="Margin" Value="0 -1 -2 0"/>
+                <Setter Property="Padding" Value="7 2"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="VerticalContentAlignment" Value="Center"/>
+                <Setter Property="Panel.ZIndex" Value="70"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="scheduleView:TimeRulerMonthViewItem">
+                            <Grid>
+                                <Border BorderThickness="0 0 1 0">
+                                    <telerik:RadButton
+                                    Padding="0"
+                                    VerticalAlignment="Top"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                    Style="{StaticResource GoToDayButtonStyle}"
+                                    Command="scheduleView:RadScheduleViewCommands.SetDayViewMode"
+                                    CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content.DateTime.Date}">
+                                        <ContentPresenter Margin="{TemplateBinding Padding}" x:Name="ButtonContent"/>
+                                    </telerik:RadButton>
+                                </Border>
+                                <telerik:RadToggleButton
+                                Visibility="Collapsed"
+                                IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                Style="{StaticResource ExpandMonthViewButtonStyle}"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style x:Key="CustomTimeRulerMonthViewTodayItemStyle" TargetType="scheduleView:TimeRulerMonthViewItem">
+                <Setter Property="FontFamily" Value="{telerik:Office2016Resource ResourceKey=FontFamily}"/>
+                <Setter Property="FontSize" Value="{telerik:Office2016Resource ResourceKey=FontSize}"/>
+                <Setter Property="Foreground" Value="{telerik:Office2016Resource ResourceKey=MarkerInvertedBrush}"/>
+                <Setter Property="BorderBrush" Value="{telerik:Office2016Resource ResourceKey=AccentBrush}"/>
+                <Setter Property="BorderThickness" Value="1"/>
+                <Setter Property="Margin" Value="0 0 -2 0"/>
+                <Setter Property="Padding" Value="7 8 7 0"/>
+                <Setter Property="HorizontalContentAlignment" Value="Left"/>
+                <Setter Property="VerticalContentAlignment" Value="Top"/>
+                <Setter Property="Panel.ZIndex" Value="105"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="scheduleView:TimeRulerMonthViewItem">
+                            <Grid>
+                                <Border BorderThickness="{TemplateBinding BorderThickness}" BorderBrush="{TemplateBinding BorderBrush}"/>
+                                <telerik:RadButton
+                                Padding="0"
+                                VerticalAlignment="Top"
+                                HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                Style="{StaticResource GoToDayTodayButtonStyle}"
+                                Command="scheduleView:RadScheduleViewCommands.SetDayViewMode"
+                                CommandParameter="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Content.DateTime.Date}">
+                                    <ContentControl
+                                    Margin="{TemplateBinding Padding}"
+                                    Content="{TemplateBinding Content}"
+                                    ContentTemplate="{TemplateBinding ContentTemplate}"
+                                    Foreground="{TemplateBinding Foreground}"/>
+                                </telerik:RadButton>
+                                <telerik:RadToggleButton
+                                Visibility="Collapsed"
+                                IsChecked="{Binding IsExpanded, Mode=TwoWay}"
+                                Style="{StaticResource ExpandMonthViewButtonStyle}"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Bottom"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+
+            <scheduleView:OrientedTimeRulerItemStyleSelector x:Key="CustomTimeRulerItemStyleSelector" 
+                                                      MonthViewGroupStyle="{StaticResource TimeRulerMonthViewGroupItemStyle}" 
+                                                      MonthViewTickStyle="{StaticResource CustomTimeRulerMonthViewItemStyle}" 
+                                                      MonthViewTodayTickStyle="{StaticResource CustomTimeRulerMonthViewTodayItemStyle}" 
+                                                      >
+            </scheduleView:OrientedTimeRulerItemStyleSelector>
+
+        </ResourceDictionary>
+    </UserControl.Resources>
+
+    <Grid>
+        <scheduleView:RadScheduleView AppointmentsSource="{Binding Appointments}"
+                                      ActiveViewDefinitionIndex="3"
+                                      SelectedAppointment="{x:Null}"
+                                      AppointmentItemContentTemplate="{StaticResource AppointmentTemplate}"
+                                      GroupHeaderStyleSelector="{StaticResource CustomGroupHeaderStyleSelector}"
+                                      TimeRulerItemStyleSelector="{StaticResource CustomTimeRulerItemStyleSelector}"
+                                      >
+            <scheduleView:RadScheduleView.ViewDefinitions>
+                <scheduleView:MonthViewDefinition AllowCustomAppointmentSize="True"
+                                                  DayStartTime="00:00:00"
+                />
+            </scheduleView:RadScheduleView.ViewDefinitions>
+            <scheduleView:RadScheduleView.AppointmentStyleSelector>
+
+                <viewModels:ReservationStyleSelector 
+                    RequestedStatusStyle="{StaticResource RequestedStatusStyle}"
+                    ApprovedStatusStyle="{StaticResource ApprovedStatusStyle}"
+                    DeclinedStatusStyle="{StaticResource DeclinedStatusStyle}"
+                    CanceledStatusStyle="{StaticResource CanceledStatusStyle}" />
+            </scheduleView:RadScheduleView.AppointmentStyleSelector>
+        </scheduleView:RadScheduleView>
+    </Grid>
+</UserControl>
