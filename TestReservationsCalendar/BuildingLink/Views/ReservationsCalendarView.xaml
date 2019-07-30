@@ -91,16 +91,8 @@
             </Style>
 
             <scheduleView:OrientedGroupHeaderStyleSelector x:Key="CustomGroupHeaderStyleSelector" 
-                                                                  HorizontalStyle="{StaticResource HorizontalGroupHeaderStyle}" 
-                                                                  HorizontalTodayStyle="{StaticResource HorizontalTodayGroupHeaderStyle}" 
-                                                                  HorizontalBottomLevelStyle="{StaticResource HorizontalBottomLevelGroupHeaderStyle}" 
-                                                                  HorizontalTodayBottomLevelStyle="{StaticResource HorizontalBottomLevelTodayGroupHeaderStyle}" 
-                                                                  VerticalStyle="{StaticResource VerticalGroupHeaderStyle}" 
-                                                                  VerticalTodayStyle="{StaticResource VerticalTodayGroupHeaderStyle}" 
-                                                                  VerticalBottomLevelStyle="{StaticResource VerticalBottomLevelGroupHeaderStyle}" 
-                                                                  VerticalTodayBottomLevelStyle="{StaticResource VerticalBottomLevelTodayGroupHeaderStyle}" 
-                                                                  MonthViewWeekGroupStyle="{StaticResource CustomMonthViewWeekGroupStyle}" 
-                                                                  MonthViewBottomLevelWeekGroupStyle="{StaticResource CustomMonthViewBottomLevelWeekGroupStyle}"/>
+                                                           MonthViewWeekGroupStyle="{StaticResource CustomMonthViewWeekGroupStyle}" 
+                                                           MonthViewBottomLevelWeekGroupStyle="{StaticResource CustomMonthViewBottomLevelWeekGroupStyle}"/>
 
             <Style x:Key="CustomTimeRulerMonthViewItemStyle" TargetType="scheduleView:TimeRulerMonthViewItem">
                 <Setter Property="FontFamily" Value="{telerik:Office2016Resource ResourceKey=FontFamily}"/>
@@ -191,6 +183,30 @@
                                                       >
             </scheduleView:OrientedTimeRulerItemStyleSelector>
 
+            <Style x:Key="CustomMouseOverHighlightStyle" TargetType="telerik:HighlightItem">
+                <Setter Property="Background" Value="{StaticResource BlueCategoryBrush}" />
+                <Setter Property="BorderBrush" Value="{x:Null}" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="Margin" Value="1 0 -1 0" />
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate>
+                            <Border Background="{TemplateBinding Background}" Opacity="0.1" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <viewModels:SpecialSlotStyleSelector x:Key="CustomSpecialSlotStyleSelector">
+                <viewModels:SpecialSlotStyleSelector.OtherMonthStyle>
+                    <Style TargetType="scheduleView:HighlightItem" BasedOn="{StaticResource HighlightItemStyle}">
+                        <Setter Property="Background" Value="Blue"/>
+                        <Setter Property="Opacity" Value="0.5"/>
+                    </Style>
+                </viewModels:SpecialSlotStyleSelector.OtherMonthStyle>
+            </viewModels:SpecialSlotStyleSelector>
+
+
         </ResourceDictionary>
     </UserControl.Resources>
 
@@ -201,14 +217,18 @@
                                       AppointmentItemContentTemplate="{StaticResource AppointmentTemplate}"
                                       GroupHeaderStyleSelector="{StaticResource CustomGroupHeaderStyleSelector}"
                                       TimeRulerItemStyleSelector="{StaticResource CustomTimeRulerItemStyleSelector}"
-                                      >
+                                      SpecialSlotStyleSelector="{StaticResource CustomSpecialSlotStyleSelector}"
+                                      MouseOverHighlightStyle="{StaticResource CustomMouseOverHighlightStyle}"
+                                      SpecialSlotsSource="{Binding SpecialSlots}"
+                                      CurrentDate="{Binding CurrentDate, Mode=TwoWay}"
+        >
             <scheduleView:RadScheduleView.ViewDefinitions>
                 <scheduleView:MonthViewDefinition AllowCustomAppointmentSize="True"
                                                   DayStartTime="00:00:00"
+                                                  VisibleDays="{Binding VisibleDays}"
                 />
             </scheduleView:RadScheduleView.ViewDefinitions>
             <scheduleView:RadScheduleView.AppointmentStyleSelector>
-
                 <viewModels:ReservationStyleSelector 
                     RequestedStatusStyle="{StaticResource RequestedStatusStyle}"
                     ApprovedStatusStyle="{StaticResource ApprovedStatusStyle}"

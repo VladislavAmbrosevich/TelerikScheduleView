@@ -109,6 +109,8 @@
     </Compile>
     <Compile Include="BuildingLink\Data\AmenityReservation.cs" />
     <Compile Include="BuildingLink\Data\JsonSerializer.cs" />
+    <Compile Include="BuildingLink\Data\OtherMonthSlot.cs" />
+    <Compile Include="BuildingLink\ViewModels\SpecialSlotStyleSelector.cs" />
     <Compile Include="BuildingLink\ViewModels\ReservationStyleSelector.cs" />
     <Compile Include="BuildingLink\ViewModels\ReservationsCalendarViewModel.cs" />
     <Compile Include="BuildingLink\Views\ReservationsCalendarView.xaml.cs">
